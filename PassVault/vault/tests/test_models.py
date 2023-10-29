@@ -1,7 +1,6 @@
 from django.test import TestCase
-from vault.models import CustomUser, Folder, Entry
+from vault.models import Folder, Entry
 from django.contrib.auth import get_user_model
-
 
 class UsersManagersTests(TestCase):
 

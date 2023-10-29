@@ -11,6 +11,8 @@ def user_register(request):
         if form.is_valid():
             form.save()
             return redirect('login')
+        else:
+            print(form.errors)   
     else:
         form = RegisterForm()
     return render(request, 'register.html', {'form':form})
@@ -30,4 +32,5 @@ def user_login(request):
     return render(request, 'login.html', {'form':form})
 
 def user_logout(request):
+    logout(request)
     return redirect('login')
