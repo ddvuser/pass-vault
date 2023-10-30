@@ -44,3 +44,29 @@ class RegistrationTestCase(TestCase):
     def test_user_logout(self):
         response = self.client.get(reverse('logout'))
         self.assertEqual(response.status_code, 302)
+
+class PasswordChangeTestCase(TestCase):
+
+    def setUp(self):
+        User = get_user_model()
+        self.test_email = "test@user.com"
+        self.test_password = 'nby6_uy4Y,$OE%FCMKSJ' 
+        self.user = User.objects.create_user(email=self.test_email, password=self.test_password)
+
+        self.client = Client()
+        log_data = {
+            'email': self.test_email,
+            'password': self.test_password,
+        }
+        self.client.post(reverse('login'), log_data)
+
+    def test_password_change(self):
+        data = {
+            'old_password': self.test_password,
+            'new_password1': 'K242vb`e$4hF',
+            'new_password2': 'K242vb`e$4hF'
+        }
+        response = self.client.post(reverse('change_password'), data)
+
+        self.assertEqual(response.status_code, 302)
+
