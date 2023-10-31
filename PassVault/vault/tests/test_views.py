@@ -127,6 +127,56 @@ class PasswordResetTestCase(TestCase):
         response = self.client.post(reset_link, data)
         self.assertEqual(response.status_code, 302)
 
+class EmailChangeTestCase(TestCase):
+    def setUp(self):
+        # Create new user
+        self.User = get_user_model()
+        self.test_email = "test@user.com"
+        self.test_password = 'nby6_uy4Y,$OE%FCMKSJ'
+        self.user = self.User.objects.create_user(email=self.test_email, password=self.test_password)
+        self.client = Client()
+        # Log in user
+        self.client.post(reverse('login'), {'email':self.test_email, 'password':self.test_password})
+        self.new_email = 'john@user.com'
+        self.email = mail.outbox 
+
+    def test_init_email_change(self):
+        response = self.client.post(reverse('init_email_change'))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(len(self.email), 1)
+        self.assertEqual(self.email[0].to, [self.test_email])
+
+    def test_verify_email_change(self):
+        self.client.post(reverse('init_email_change'))
+
+        # Extract the verification code from the email body
+        v_code_pattern = r'\b\d{6}\b'
+        message = self.email[0].body
+        match = re.search(v_code_pattern, message)
+        verification_code = match.group()
+
+        response = self.client.post(reverse('verify_email_change'), {'verification_code': verification_code})
+        self.assertEqual(response.status_code, 302)
+
+    def test_submit_new_email(self):
+        self.client.post(reverse('init_email_change'))
+        # Extract the verification code from the email body
+        v_code_pattern = r'\b\d{6}\b'
+        message = self.email[0].body
+        match = re.search(v_code_pattern, message)
+        verification_code = match.group()
+
+        # Send extracted verification code
+        response = self.client.post(reverse('verify_email_change'), {'verification_code': verification_code})
+        self.assertEqual(response.status_code, 302)
+        
+        self.assertEqual(self.user.email, self.test_email)
+        response = self.client.post(reverse('submit_new_email'), {'new_email': self.new_email})
+        
+        updated_user = self.User.objects.get(email='john@user.com')
+        self.assertEqual(updated_user.email, 'john@user.com')
+
+        
 
 
 

@@ -89,7 +89,7 @@ def init_email_change(request):
             Thank you for using our service.
 
             Sincerely,
-            Your Website Name
+            PassVault 
         '''
         # Send the email with the verification code to the user's current email address
         send_mail(subject, message, 'your_email@example.com', [email], fail_silently=False)
