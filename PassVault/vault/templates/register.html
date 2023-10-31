@@ -3,7 +3,13 @@
 <h1>Register</h1>
 <form method="POST">
     {% csrf_token %}
-    {{ form.as_p }}
+    {% for field in form %}
+        {{ field.label_tag }} 
+        {{ field }}
+        {% if field.errors %}
+            <small>{{ field.errors|striptags  }}</small> 
+        {% endif %}
+    {% endfor %} 
     <button type="submit">Register</button>
     <a href="{% url 'login' %}">Already have account?</a>
 </form>

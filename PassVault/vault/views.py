@@ -8,13 +8,12 @@ from django.core.mail import send_mail
 import random
 import string
 
-def display_error_message(request, errors):
-    error_messages = [error for field, error in errors.items()]
-    for error in error_messages:
-        messages.error(request, error)
-
 def index(request):
     return render(request, 'index.html')
+
+@login_required(login_url='login')
+def profile(request):
+    return render(request, 'profile.html')
 
 def user_register(request):
     if request.method == 'POST':
@@ -23,8 +22,6 @@ def user_register(request):
             form.save()
             messages.success(request, 'You are successfully registered.')
             return redirect('login')
-        else:
-            display_error_message(request, form.errors)
     else:
         form = RegisterForm()
     return render(request, 'register.html', {'form':form})
@@ -39,7 +36,7 @@ def user_login(request):
             if user:
                 login(request, user)
                 messages.success(request, 'You are logged in.')
-                return redirect('index')
+                return redirect('profile')
         messages.error(request, 'Wrong credentials!')
     else:
         form = LoginForm()
@@ -59,9 +56,7 @@ def change_password(request):
             user = form.save()
             update_session_auth_hash(request, user)
             messages.success(request, 'Your password was successfully updated.')
-            return redirect('index')
-        else:
-            display_error_message(request, form.errors) 
+            return redirect('profile')
     else:
         form = PasswordChangeForm(request.user)
     return render(request, 'change_password.html', {'form':form})
@@ -123,6 +118,6 @@ def submit_new_email(request):
         request.session.pop('email_change_code', None)
 
         messages.success(request, 'Your email address has been updated.')
-        return redirect('index')
+        return redirect('profile')
 
     return render(request, 'email_change/submit_new_email.html')
