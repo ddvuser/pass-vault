@@ -1,15 +1,46 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
-from .forms import RegisterForm, LoginForm
+from .forms import RegisterForm, LoginForm, AddItemForm
 from django.contrib import messages
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+from .models import Folder, Entry
 import random
 import string
 
 def index(request):
-    return render(request, 'index.html')
+
+    entries = Entry.objects.filter(user=request.user)
+    return render(request, 'index.html', {'entries':entries})
+
+@login_required(login_url='login')
+def add_item(request):
+    if request.method == 'POST':
+        form = AddItemForm(request.POST)
+        if form.is_valid():
+            # Get the currently logged-in user
+            user = request.user
+
+            # Create a new Entry instance and associate it with the user
+            entry = form.save(commit=False)
+            entry.user = user
+            entry.save()
+            messages.success(request, 'Item added.')
+            return redirect('index')
+    else:
+        form = AddItemForm()
+    return render(request, 'add_item.html', {'form':form})
+    
+@login_required(login_url='login')
+def delete_item(request, id):
+    if request.method == 'POST':
+        obj = Entry.objects.get(user=request.user, id=id)
+        # confirm delete
+        return redirect('index')
+    return redirect('index')
+
+
 
 @login_required(login_url='login')
 def profile(request):

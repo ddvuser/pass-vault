@@ -3,6 +3,18 @@
 {% if request.user.is_authenticated %}
     <p>{{ request.user.email }}</p>
     <a href="{% url 'profile' %}">Profile</a>
+    <a href="{% url 'add_item' %}">Add item</a>
+    {% for entry in entries %}
+        {% if entry.folder is None %}
+            <p>
+                {{entry.name}}
+                <form method="post" action="{% url 'delete_item' entry.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Delete item</button>
+                </form>
+            </p>
+        {% endif %}
+    {% endfor %}
 {% else %}
     <a href="{% url 'login' %}">Login</a>
     <a href="{% url 'register' %}">Register</a>
