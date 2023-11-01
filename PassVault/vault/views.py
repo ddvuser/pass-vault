@@ -81,6 +81,15 @@ def add_folder(request):
     return render(request, 'folder/add_folder.html', {'form':form})
 
 @login_required(login_url='login')
+def view_folder(request, name):
+    if request.method == 'GET':
+        folder = get_object_or_404(Folder, name=name)
+        items = Entry.objects.filter(user=request.user, folder=folder)
+        return render(request, 'folder/view_folder.html', {'items':items})
+    else:
+        return BadRequest('Invalid Request.')
+
+@login_required(login_url='login')
 def profile(request):
     return render(request, 'profile.html')
 

@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% for entry in items %}
+        <a href="{% url 'view_item' entry.id %}">{{ entry.name }}</a>
+    {% endfor %}
+{% endblock content %}
