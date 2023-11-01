@@ -12,8 +12,9 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     # CRUD item
     path('add-item/', views.add_item, name='add_item'),
-    path('delete-item/<int:id>', views.delete_item, name='delete_item'),
-    path('edit-item/<int:id>', views.edit_item, name='edit_item'),
+    path('view-item/<int:id>/', views.view_item, name='view_item'),
+    path('delete-item/<int:id>/', views.delete_item, name='delete_item'),
+    path('edit-item/<int:id>/', views.edit_item, name='edit_item'),
     # Registration
     path('register/', views.user_register, name='register'),
     path('login/', views.user_login, name='login'),

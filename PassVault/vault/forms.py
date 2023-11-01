@@ -28,5 +28,5 @@ class EditItemForm(forms.ModelForm):
         fields = ['name', 'password', 'email', 'note', 'folder']
 
     widgets = {
-        'note': forms.Textarea(attrs={'rows': 4}),  # Define the Textarea widget for the 'note' field
+        'note': forms.Textarea(attrs={'rows': 4}),
     }

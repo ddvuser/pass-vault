@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+from django.core.exceptions import BadRequest
 from .models import Folder, Entry
 import random
 import string
@@ -53,7 +54,13 @@ def edit_item(request, id):
 
     return render(request, 'edit_item.html', {'form': form})
 
-
+@login_required(login_url='login')
+def view_item(request, id):
+    item = get_object_or_404(Entry, id=id)
+    if request.method == 'GET':
+        return render(request, 'view_item.html', {'item':item})
+    else:
+        return BadRequest('Ivalid Request.')
 
 @login_required(login_url='login')
 def profile(request):
