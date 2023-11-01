@@ -21,3 +21,12 @@ class AddItemForm(forms.ModelForm):
     email = forms.EmailField(required=False)
     note = forms.CharField(widget=forms.Textarea, required=False)
     folder = forms.ModelChoiceField(queryset=Folder.objects.all(), required=False)
+
+class EditItemForm(forms.ModelForm):
+    class Meta:
+        model = Entry
+        fields = ['name', 'password', 'email', 'note', 'folder']
+
+    widgets = {
+        'note': forms.Textarea(attrs={'rows': 4}),  # Define the Textarea widget for the 'note' field
+    }

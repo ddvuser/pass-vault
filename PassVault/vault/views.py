@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
-from .forms import RegisterForm, LoginForm, AddItemForm
+from .forms import RegisterForm, LoginForm, AddItemForm, EditItemForm
 from django.contrib import messages
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
@@ -35,10 +35,23 @@ def add_item(request):
 @login_required(login_url='login')
 def delete_item(request, id):
     if request.method == 'POST':
-        obj = Entry.objects.get(user=request.user, id=id)
+        entry = get_object_or_404(Entry, user=request.user, id=id)
         # confirm delete
         return redirect('index')
     return redirect('index')
+
+@login_required(login_url='login')
+def edit_item(request, id):
+    item = get_object_or_404(Entry, id=id)
+    if request.method == 'POST':
+        form = EditItemForm(request.POST, instance=item)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+    else:
+        form = EditItemForm(instance=item)  # Prepopulate the form with item's data
+
+    return render(request, 'edit_item.html', {'form': form})
 
 
 

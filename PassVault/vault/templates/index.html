@@ -8,6 +8,7 @@
         {% if entry.folder is None %}
             <p>
                 {{entry.name}}
+                <a href="{% url 'edit_item' entry.id %}">Edit</a>
                 <form method="post" action="{% url 'delete_item' entry.id %}">
                     {% csrf_token %}
                     <button type="submit">Delete item</button>
