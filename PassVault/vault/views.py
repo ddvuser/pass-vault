@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
-from .forms import RegisterForm, LoginForm, AddItemForm, EditItemForm
+from .forms import RegisterForm, LoginForm, AddItemForm, EditItemForm, AddFolderForm
 from django.contrib import messages
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
@@ -11,9 +11,9 @@ import random
 import string
 
 def index(request):
-
+    folders = Folder.objects.filter(user=request.user)
     entries = Entry.objects.filter(user=request.user)
-    return render(request, 'index.html', {'entries':entries})
+    return render(request, 'index.html', {'entries':entries, 'folders': folders})
 
 @login_required(login_url='login')
 def add_item(request):
@@ -31,7 +31,7 @@ def add_item(request):
             return redirect('index')
     else:
         form = AddItemForm()
-    return render(request, 'add_item.html', {'form':form})
+    return render(request, 'item/add_item.html', {'form':form})
     
 @login_required(login_url='login')
 def delete_item(request, id):
@@ -52,15 +52,33 @@ def edit_item(request, id):
     else:
         form = EditItemForm(instance=item)  # Prepopulate the form with item's data
 
-    return render(request, 'edit_item.html', {'form': form})
+    return render(request, 'item/edit_item.html', {'form': form})
 
 @login_required(login_url='login')
 def view_item(request, id):
     item = get_object_or_404(Entry, id=id)
     if request.method == 'GET':
-        return render(request, 'view_item.html', {'item':item})
+        return render(request, 'item/view_item.html', {'item':item})
     else:
         return BadRequest('Ivalid Request.')
+    
+@login_required(login_url='login')
+def add_folder(request):
+    if request.method == 'POST':
+        form = AddFolderForm(request.POST)
+        if form.is_valid():
+            # Get the currently logged-in user
+            user = request.user
+
+            # Create a new Entry instance and associate it with the user
+            folder = form.save(commit=False)
+            folder.user = user
+            folder.save()
+            messages.success(request, 'Folder added.')
+            return redirect('index')
+    else:
+        form = AddFolderForm()
+    return render(request, 'folder/add_folder.html', {'form':form})
 
 @login_required(login_url='login')
 def profile(request):

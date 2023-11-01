@@ -15,6 +15,9 @@ urlpatterns = [
     path('view-item/<int:id>/', views.view_item, name='view_item'),
     path('delete-item/<int:id>/', views.delete_item, name='delete_item'),
     path('edit-item/<int:id>/', views.edit_item, name='edit_item'),
+    # CRUD Folder
+    path('add-folder/', views.add_folder, name='add_folder'),
+    
     # Registration
     path('register/', views.user_register, name='register'),
     path('login/', views.user_login, name='login'),

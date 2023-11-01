@@ -30,3 +30,10 @@ class EditItemForm(forms.ModelForm):
     widgets = {
         'note': forms.Textarea(attrs={'rows': 4}),
     }
+
+class AddFolderForm(forms.ModelForm):
+    class Meta:
+        model = Folder
+        fields = ['name',]
+    
+    name = forms.CharField(max_length=80, strip=True)
