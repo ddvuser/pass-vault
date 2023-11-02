@@ -7,5 +7,5 @@
 <p>Password: {{ item.password }}</p>
 <p>Email: {{ item.email }}</p>
 <p>Notes: {{ item.note }}</p>
-<p>Folder: {{ item.folder }}</p>
+<p>Folder: <a href="{% url 'view_folder' item.folder %}">{{ item.folder }}</a></p>
 {% endblock content %}

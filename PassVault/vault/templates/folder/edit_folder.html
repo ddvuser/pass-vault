@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+
+    {% for field in form %}
+        {{ field.label_tag }} 
+        {{ field }}
+        {% if field.errors %}
+            <small>{{ field.errors|striptags  }}</small> 
+        {% endif %}
+    {% endfor %} 
+
+    <button type="submit">Edit folder</button>
+</form>
+{% endblock content %}

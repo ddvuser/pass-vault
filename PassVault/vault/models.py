@@ -21,7 +21,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 class Folder(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    name = models.CharField(max_length=80) 
+    name = models.CharField(max_length=80)
+
+    def __str__(self) -> str:
+        return self.name
 
 class Entry(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)

@@ -6,7 +6,11 @@
     <h3>Folders:</h3>
     <a href="{% url 'add_folder' %}">Add folder</a>
     {% for folder in folders %}
-        <a href="{% url 'view_folder' folder.name %}">{{ folder.name }}</a>
+        <p>
+            <a href="{% url 'view_folder' folder.name %}">{{ folder.name }}</a>
+            <a href="{% url 'edit_folder' folder.name %}">Edit folder</a>
+        </p>
+        
     {% endfor %}
     <h3>Entries:</h3>
     <a href="{% url 'add_item' %}">Add item</a>

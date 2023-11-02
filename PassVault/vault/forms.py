@@ -37,3 +37,8 @@ class AddFolderForm(forms.ModelForm):
         fields = ['name',]
     
     name = forms.CharField(max_length=80, strip=True)
+
+class EditFolderForm(forms.ModelForm):
+    class Meta:
+        model = Entry
+        fields = ['name',]

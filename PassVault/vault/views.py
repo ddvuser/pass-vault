@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
-from .forms import RegisterForm, LoginForm, AddItemForm, EditItemForm, AddFolderForm
+from .forms import RegisterForm, LoginForm, AddItemForm, EditItemForm, AddFolderForm, EditFolderForm
 from django.contrib import messages
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
@@ -43,7 +43,7 @@ def delete_item(request, id):
 
 @login_required(login_url='login')
 def edit_item(request, id):
-    item = get_object_or_404(Entry, id=id)
+    item = get_object_or_404(Entry, user=request.user, id=id)
     if request.method == 'POST':
         form = EditItemForm(request.POST, instance=item)
         if form.is_valid():
@@ -56,7 +56,7 @@ def edit_item(request, id):
 
 @login_required(login_url='login')
 def view_item(request, id):
-    item = get_object_or_404(Entry, id=id)
+    item = get_object_or_404(Entry, user=request.user, id=id)
     if request.method == 'GET':
         return render(request, 'item/view_item.html', {'item':item})
     else:
@@ -83,11 +83,23 @@ def add_folder(request):
 @login_required(login_url='login')
 def view_folder(request, name):
     if request.method == 'GET':
-        folder = get_object_or_404(Folder, name=name)
+        folder = get_object_or_404(Folder, user=request.user, name=name)
         items = Entry.objects.filter(user=request.user, folder=folder)
         return render(request, 'folder/view_folder.html', {'items':items})
     else:
         return BadRequest('Invalid Request.')
+    
+@login_required(login_url='login')
+def edit_folder(request, name):
+    folder = get_object_or_404(Folder, user=request.user, name=name)
+    if request.method == 'POST':
+        form = EditFolderForm(request.POST, instance=folder)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+    else:
+        form = EditFolderForm(instance=folder)  # Prepopulate the form with item's data
+    return render(request, 'folder/edit_folder.html', {'form': form})
 
 @login_required(login_url='login')
 def profile(request):
