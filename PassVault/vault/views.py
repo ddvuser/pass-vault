@@ -35,11 +35,13 @@ def add_item(request):
     
 @login_required(login_url='login')
 def delete_item(request, id):
+    entry = get_object_or_404(Entry, user=request.user, id=id)
     if request.method == 'POST':
-        entry = get_object_or_404(Entry, user=request.user, id=id)
-        # confirm delete
+        entry.delete()
         return redirect('index')
-    return redirect('index')
+    else:
+        # confirm delete
+        return render(request, 'item/delete_item_confirm.html', {'item':entry})
 
 @login_required(login_url='login')
 def edit_item(request, id):
@@ -85,7 +87,7 @@ def view_folder(request, name):
     if request.method == 'GET':
         folder = get_object_or_404(Folder, user=request.user, name=name)
         items = Entry.objects.filter(user=request.user, folder=folder)
-        return render(request, 'folder/view_folder.html', {'items':items})
+        return render(request, 'folder/view_folder.html', {'items':items, 'folder':folder.name})
     else:
         return BadRequest('Invalid Request.')
     
@@ -100,6 +102,16 @@ def edit_folder(request, name):
     else:
         form = EditFolderForm(instance=folder)  # Prepopulate the form with item's data
     return render(request, 'folder/edit_folder.html', {'form': form})
+
+@login_required(login_url='login')
+def delete_folder(request, name):
+    folder = get_object_or_404(Folder, user=request.user, name=name)
+    if request.method == 'POST':
+        folder.delete()
+        return redirect('index')
+    else:
+        # confirm delete
+        return render(request, 'folder/delete_folder_confirm.html', {'folder':folder.name})
 
 @login_required(login_url='login')
 def profile(request):

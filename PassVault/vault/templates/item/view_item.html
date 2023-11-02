@@ -8,4 +8,5 @@
 <p>Email: {{ item.email }}</p>
 <p>Notes: {{ item.note }}</p>
 <p>Folder: <a href="{% url 'view_folder' item.folder %}">{{ item.folder }}</a></p>
+<a href="{% url 'delete_item' item.id %}">Delete entry</a>
 {% endblock content %}

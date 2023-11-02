@@ -20,10 +20,6 @@
                 {{entry.name}}
                 <a href="{% url 'edit_item' entry.id %}">Edit</a>
                 <a href="{% url 'view_item' entry.id %}">View</a>
-                <form method="post" action="{% url 'delete_item' entry.id %}">
-                    {% csrf_token %}
-                    <button type="submit">Delete item</button>
-                </form>
             </p>
         {% endif %}
     {% endfor %}
