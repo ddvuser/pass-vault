@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
-from django.core.exceptions import BadRequest
+from django.http import HttpResponseNotFound, HttpResponseBadRequest
 from .models import Folder, Entry
 import random
 import string
@@ -27,7 +27,7 @@ def add_item(request):
             entry = form.save(commit=False)
             entry.user = user
             entry.save()
-            messages.success(request, 'Item added.')
+            messages.success(request, 'Entry added.')
             return redirect('index')
     else:
         form = AddItemForm()
@@ -58,11 +58,14 @@ def edit_item(request, id):
 
 @login_required(login_url='login')
 def view_item(request, id):
-    item = get_object_or_404(Entry, user=request.user, id=id)
     if request.method == 'GET':
-        return render(request, 'item/view_item.html', {'item':item})
+        item = get_object_or_404(Entry, user=request.user, id=id)
+        if item.user == request.user: 
+            return render(request, 'item/view_item.html', {'item':item})
+        else:
+            return HttpResponseNotFound('Item not found')
     else:
-        return BadRequest('Ivalid Request.')
+        return HttpResponseBadRequest('Ivalid Request.')
     
 @login_required(login_url='login')
 def add_folder(request):
@@ -89,7 +92,7 @@ def view_folder(request, name):
         items = Entry.objects.filter(user=request.user, folder=folder)
         return render(request, 'folder/view_folder.html', {'items':items, 'folder':folder.name})
     else:
-        return BadRequest('Invalid Request.')
+        return HttpResponseBadRequest('Invalid Request.')
     
 @login_required(login_url='login')
 def edit_folder(request, name):
