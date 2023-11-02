@@ -10,6 +10,7 @@ from .models import Folder, Entry
 import random
 import string
 
+@login_required(login_url='login')
 def index(request):
     folders = Folder.objects.filter(user=request.user)
     entries = Entry.objects.filter(user=request.user)
@@ -29,6 +30,8 @@ def add_item(request):
             entry.save()
             messages.success(request, 'Entry added.')
             return redirect('index')
+        else:
+            return redirect('add_item')
     else:
         form = AddItemForm()
     return render(request, 'item/add_item.html', {'form':form})
@@ -81,6 +84,8 @@ def add_folder(request):
             folder.save()
             messages.success(request, 'Folder added.')
             return redirect('index')
+        else:
+            return redirect('add_folder')
     else:
         form = AddFolderForm()
     return render(request, 'folder/add_folder.html', {'form':form})

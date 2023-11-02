@@ -30,6 +30,18 @@ class ItemViewsTestCase(TestCase):
         response = self.client.post(reverse('add_item'), data)
         self.assertEqual(response.status_code, 302)  # Redirect after successful item addition
         self.assertTrue(Entry.objects.filter(name='New Item').exists())
+    
+    def test_length_exceed(self):
+        # Test name field length exceeding
+        response = self.client.post(reverse('add_item'), {'name': 'New2 Item'*15})
+        self.assertFalse(Entry.objects.filter(name='New Item'*10).exists()) 
+        self.assertEqual(response.status_code, 302)
+
+    def test_incorrect_email(self):
+        # Test wrong email
+        response = self.client.post(reverse('add_item'), {'email': 'email'})
+        self.assertFalse(Entry.objects.filter(email='email').exists()) 
+        self.assertEqual(response.status_code, 302)
 
     def test_view_item_view(self):
         response = self.client.get(reverse('view_item', args=[self.item.id]))

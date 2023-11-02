@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+    <h2>{{ folder }}</h2>
     <a href="{% url 'delete_folder' folder %}">Delete folder</a>
     {% for entry in items %}
         <a href="{% url 'view_item' entry.id %}">{{ entry.name }}</a>
