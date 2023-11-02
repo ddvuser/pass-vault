@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.test import Client
 from django.core import mail
 import re
+from ..models import Entry
 
 class RegistrationTestCase(TestCase):
 
@@ -176,8 +177,20 @@ class EmailChangeTestCase(TestCase):
         updated_user = self.User.objects.get(email='john@user.com')
         self.assertEqual(updated_user.email, 'john@user.com')
 
+class EntryAddTestCase(TestCase):
+    
+    def setUp(self):
+        # Create new user
+        self.User = get_user_model()
+        self.test_email = "test@user.com"
+        self.test_password = 'nby6_uy4Y,$OE%FCMKSJ'
+        self.user = self.User.objects.create_user(email=self.test_email, password=self.test_password)
+        self.client = Client()
+        # Log in user
+        self.client.post(reverse('login'), {'email':self.test_email, 'password':self.test_password})
         
-
-
-
-
+    def test_add_item(self):
+        self.client.post(reverse('add_item'))
+        self.assertEqual(len(Entry.objects.all()), 0)
+        self.client.post(reverse('add_item'), {'name':'test'})
+        self.assertEqual(len(Entry.objects.all()), 1)
