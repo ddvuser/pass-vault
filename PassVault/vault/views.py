@@ -30,8 +30,10 @@ def add_item(request):
             entry = form.save(commit=False)
             entry.user = user
             # Encrypt password and email before saving it
-            entry.password = encrypt(entry.password, os.environ.get('SECRET_KEY'))
-            entry.email = encrypt(entry.email, os.environ.get('SECRET_KEY'))
+            if entry.password != "":
+                entry.password = encrypt(entry.password, os.environ.get('SECRET_KEY'))
+            if entry.email != "":
+                entry.email = encrypt(entry.email, os.environ.get('SECRET_KEY'))
             entry.save()
             messages.success(request, 'Entry added.')
             return redirect('index')
@@ -60,14 +62,18 @@ def edit_item(request, id):
             entry = form.save(commit=False)
 
             # Encrypt the password and email before saving it
-            entry.password = encrypt(entry.password, os.environ.get('SECRET_KEY'))
-            entry.email = encrypt(entry.email, os.environ.get('SECRET_KEY'))
+            if entry.password != "":
+                entry.password = encrypt(entry.password, os.environ.get('SECRET_KEY'))
+            if entry.email != "":
+                entry.email = encrypt(entry.email, os.environ.get('SECRET_KEY'))
             entry.save()
             return redirect('index')
     else:
         # Decrypt password and email before rendering the view
-        item.password = decrypt(item.password, os.environ.get('SECRET_KEY'))
-        item.email = decrypt(item.email, os.environ.get('SECRET_KEY'))
+        if item.password != "":
+            item.password = decrypt(item.password, os.environ.get('SECRET_KEY'))
+        if item.email != "":
+            item.email = decrypt(item.email, os.environ.get('SECRET_KEY'))
         form = EditItemForm(instance=item)  # Prepopulate the form with item's data
 
     return render(request, 'item/edit_item.html', {'form': form})
@@ -78,8 +84,10 @@ def view_item(request, id):
         item = get_object_or_404(Entry, user=request.user, id=id)
         if item.user == request.user:
             # Decrypt password and email before rendering the view
-            item.password = decrypt(item.password, os.environ.get('SECRET_KEY'))
-            item.email = decrypt(item.email, os.environ.get('SECRET_KEY'))
+            if item.password != "":
+                item.password = decrypt(item.password, os.environ.get('SECRET_KEY'))
+            if item.email != "":
+                item.email = decrypt(item.email, os.environ.get('SECRET_KEY'))
             return render(request, 'item/view_item.html', {'item':item})
         else:
             return HttpResponseNotFound('Item not found')
