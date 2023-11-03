@@ -9,6 +9,8 @@ from django.http import HttpResponseNotFound, HttpResponseBadRequest
 from .models import Folder, Entry
 import random
 import string
+from .crypt_util import encrypt, decrypt
+import os
 
 @login_required(login_url='login')
 def index(request):
@@ -27,6 +29,9 @@ def add_item(request):
             # Create a new Entry instance and associate it with the user
             entry = form.save(commit=False)
             entry.user = user
+            # Encrypt password and email before saving it
+            entry.password = encrypt(entry.password, os.environ.get('SECRET_KEY'))
+            entry.email = encrypt(entry.email, os.environ.get('SECRET_KEY'))
             entry.save()
             messages.success(request, 'Entry added.')
             return redirect('index')
@@ -52,9 +57,17 @@ def edit_item(request, id):
     if request.method == 'POST':
         form = EditItemForm(request.POST, instance=item)
         if form.is_valid():
-            form.save()
+            entry = form.save(commit=False)
+
+            # Encrypt the password and email before saving it
+            entry.password = encrypt(entry.password, os.environ.get('SECRET_KEY'))
+            entry.email = encrypt(entry.email, os.environ.get('SECRET_KEY'))
+            entry.save()
             return redirect('index')
     else:
+        # Decrypt password and email before rendering the view
+        item.password = decrypt(item.password, os.environ.get('SECRET_KEY'))
+        item.email = decrypt(item.email, os.environ.get('SECRET_KEY'))
         form = EditItemForm(instance=item)  # Prepopulate the form with item's data
 
     return render(request, 'item/edit_item.html', {'form': form})
@@ -63,7 +76,10 @@ def edit_item(request, id):
 def view_item(request, id):
     if request.method == 'GET':
         item = get_object_or_404(Entry, user=request.user, id=id)
-        if item.user == request.user: 
+        if item.user == request.user:
+            # Decrypt password and email before rendering the view
+            item.password = decrypt(item.password, os.environ.get('SECRET_KEY'))
+            item.email = decrypt(item.email, os.environ.get('SECRET_KEY'))
             return render(request, 'item/view_item.html', {'item':item})
         else:
             return HttpResponseNotFound('Item not found')
