@@ -15,8 +15,15 @@ import os
 @login_required(login_url='login')
 def index(request):
     folders = Folder.objects.filter(user=request.user)
+    
     entries = Entry.objects.filter(user=request.user)
-    return render(request, 'index.html', {'entries':entries, 'folders': folders})
+    entries_no_folder = entries.filter(folder=None)
+    return render(request, 'index.html', 
+                  {'entries':entries, 
+                   'folders': folders,
+                   'entries_no_folder': entries_no_folder,
+                   'entries_no_folder_count': entries_no_folder.count(),
+                   'folders_count': folders.count()})
 
 @login_required(login_url='login')
 def add_item(request):

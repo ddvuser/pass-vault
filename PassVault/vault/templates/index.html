@@ -3,7 +3,7 @@
 {% if request.user.is_authenticated %}
     <p>{{ request.user.email }}</p>
     <a href="{% url 'profile' %}">Profile</a>
-    <h3>Folders:</h3>
+    <h3>Folders ({{ folders_count }}):</h3>
     <a href="{% url 'add_folder' %}">Add folder</a>
     {% for folder in folders %}
         <p>
@@ -12,7 +12,11 @@
         </p>
         
     {% endfor %}
-    <h3>Entries:</h3>
+    <h3>Entries
+        {% if entries_no_folder_count != 0%}
+            ({{ entries_no_folder_count }}):
+        {% else %}:{% endif %}
+    </h3>
     <a href="{% url 'add_item' %}">Add item</a>
     {% for entry in entries %}
         {% if entry.folder is None %}
