@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h3>Folders ({{ folders_count }}):</h3>
+    <a href="{% url 'add_folder' %}">Add folder</a>
+    {% for folder in folders %}
+        <p>
+            <a href="{% url 'view_folder' folder.name %}">{{ folder.name }}</a>
+            <a href="{% url 'edit_folder' folder.name %}">Edit folder</a>
+        </p>
+        
+    {% endfor %}
+
+{% endblock content %}

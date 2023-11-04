@@ -10,6 +10,7 @@ from django.contrib.auth.views import (
 urlpatterns = [
     path('', views.index, name='index'),
     path('profile/', views.profile, name='profile'),
+    path('folders/', views.folders, name='folders'),
     # CRUD item
     path('add-item/', views.add_item, name='add_item'),
     path('view-item/<int:id>/', views.view_item, name='view_item'),

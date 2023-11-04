@@ -26,6 +26,14 @@ def index(request):
                    'folders_count': folders.count()})
 
 @login_required(login_url='login')
+def folders(request):
+    folders = Folder.objects.filter(user=request.user)
+    return render(request, 'folders.html', 
+                  {'folders': folders,
+                   'folders_count': folders.count()})
+
+
+@login_required(login_url='login')
 def add_item(request):
     if request.method == 'POST':
         form = AddItemForm(request.POST)
@@ -83,7 +91,7 @@ def edit_item(request, id):
             item.email = decrypt(item.email, os.environ.get('SECRET_KEY'))
         form = EditItemForm(instance=item)  # Prepopulate the form with item's data
 
-    return render(request, 'item/edit_item.html', {'form': form})
+    return render(request, 'item/edit_item.html', {'form': form, 'item_id': item.id})
 
 @login_required(login_url='login')
 def view_item(request, id):
@@ -140,7 +148,7 @@ def edit_folder(request, name):
             return redirect('index')
     else:
         form = EditFolderForm(instance=folder)  # Prepopulate the form with item's data
-    return render(request, 'folder/edit_folder.html', {'form': form})
+    return render(request, 'folder/edit_folder.html', {'form': form, 'folder': folder.name})
 
 @login_required(login_url='login')
 def delete_folder(request, name):
