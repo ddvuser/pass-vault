@@ -1,13 +1,39 @@
 {% extends 'base.html' %}
+
+{% block title %}Profile{% endblock %}
+
 {% block content %}
-{% if request.user.is_authenticated %}
-    <p>{{ request.user.email }}</p>
-    <a href="{% url 'index' %}">Index</a>
-    <a href="{% url 'logout' %}">Logout</a>
-    <a href="{% url 'change_password' %}">Change Password</a>
-    <a href="{% url 'init_email_change' %}">Change Email</a>
-{% else %}
-    <a href="{% url 'login' %}">Login</a>
-    <a href="{% url 'register' %}">Register</a>
-{% endif %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    {% if request.user.is_authenticated %}
+                        <h4>{{ request.user.email }}</h4>
+                    {% else %}
+                        <h4>Authentication</h4>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    {% if request.user.is_authenticated %}
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <a href="{% url 'logout' %}" class="btn btn-danger btn-block">Logout</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="{% url 'change_password' %}" class="btn btn-secondary btn-block">Change Password</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="{% url 'init_email_change' %}" class="btn btn-info btn-block">Change Email</a>
+                            </li>
+                        </ul>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-primary btn-block mb-2">Login</a>
+                        <a href="{% url 'register' %}" class="btn btn-success btn-block">Register</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
