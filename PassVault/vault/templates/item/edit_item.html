@@ -1,17 +1,33 @@
 {% extends 'base.html' %}
+
+{% block title %}Edit Entry{% endblock %}
+
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-
-    {% for field in form %}
-        {{ field.label_tag }} 
-        {{ field }}
-        {% if field.errors %}
-            <small>{{ field.errors|striptags  }}</small> 
-        {% endif %}
-    {% endfor %} 
-
-    <button type="submit">Edit item</button>
-</form>
-<a href="{% url 'delete_item' item_id %}">Delete item</a>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="mb-0">Edit Item</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <div class="mb-3">
+                                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label_tag }}</label>
+                                {{ field }}
+                                {% if field.errors %}
+                                    <small class="text-danger">{{ field.errors|striptags }}</small>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-primary btn-block">Save Changes</button>
+                    </form>
+                    <a href="{% url 'delete_item' item_id %}" class="btn btn-danger btn-block mt-3">Delete Item</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}
