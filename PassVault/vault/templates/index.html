@@ -1,26 +1,31 @@
 {% extends 'base.html' %}
+
+{% block title %}Vault{% endblock %}
 {% block content %}
-{% if request.user.is_authenticated %}
-    <p>{{ request.user.email }}</p>
-    <a href="{% url 'profile' %}">Profile</a>
-    <a href="{% url 'folders' %}">Folders</a> 
-    <h3>Entries
-        {% if entries_no_folder_count != 0%}
-            ({{ entries_no_folder_count }}):
-        {% else %}:{% endif %}
-    </h3>
-    <a href="{% url 'add_item' %}">Add item</a>
-    {% for entry in entries %}
-        {% if entry.folder is None %}
-            <p>
-                {{entry.name}}
-                <a href="{% url 'edit_item' entry.id %}">Edit</a>
-                <a href="{% url 'view_item' entry.id %}">View</a>
-            </p>
-        {% endif %}
-    {% endfor %}
-{% else %}
-    <a href="{% url 'login' %}">Login</a>
-    <a href="{% url 'register' %}">Register</a>
-{% endif %}
+<div class="container-fluid text-center">
+    <div class="row content">
+        <div class="col-sm-2 sidenav"></div>
+        <div class="col-sm-8 text-left">
+            <div class="d-flex justify-content-between">
+                <h3>Entries
+                    {% if entries_no_folder_count != 0%}
+                        ({{ entries_no_folder_count }}):
+                    {% else %}:{% endif %}
+                </h3>
+                <a class="btn btn-outline-secondary" href="{% url 'add_item' %}">Add item</a>
+            </div>
+            <hr />
+            {% for entry in entries %}
+                {% if entry.folder is None %}
+                    <p>
+                        {{entry.name}}
+                        <a href="{% url 'edit_item' entry.id %}">Edit</a>
+                        <a href="{% url 'view_item' entry.id %}">View</a>
+                    </p>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="col-sm-2 sidenav"></div>
+    </div>
+</div>
 {% endblock %}

@@ -194,7 +194,7 @@ def user_login(request):
 @login_required(login_url='login')
 def user_logout(request):
     logout(request)
-    messages.success(request, 'You are logged out.')
+    messages.info(request, 'You are logged out.')
     return redirect('login')
 
 @login_required(login_url='login')
