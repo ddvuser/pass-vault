@@ -3,7 +3,7 @@
 {% block title %}Vault{% endblock %}
 
 {% block content %}
-<div class="container-fluid text-center mt-2">
+<div class="container-fluid mt-2">
     <div class="row content">
         <div class="col-sm-2 sidenav"></div>
         <div class="col-sm-8 text-left">
@@ -16,15 +16,16 @@
                 <a class="btn btn-outline-secondary" href="{% url 'add_item' %}">Add Entry</a>
             </div>
             <hr />
-            {% for entry in entries %}
-                {% if entry.folder is None %}
-                    <p>
-                        {{entry.name}}
-                        <a href="{% url 'edit_item' entry.id %}">Edit</a>
-                        <a href="{% url 'view_item' entry.id %}">View</a>
-                    </p>
-                {% endif %}
-            {% endfor %}
+            <ul class="list-group text-left">
+                {% for entry in entries %}
+                    {% if entry.folder is None %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a class="btn btn-link" href="{% url 'view_item' entry.id %}">{{entry.name}}</a>
+                            <a class="btn btn-outline-warning btn-sm align-self-center" href="{% url 'edit_item' entry.id %}">Edit</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
         </div>
         <div class="col-sm-2 sidenav"></div>
     </div>
