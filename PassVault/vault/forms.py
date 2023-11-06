@@ -7,11 +7,9 @@ class RegisterForm(UserCreationForm):
         model = CustomUser
         fields = ['email', 'password1', 'password2']
 
-        widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'password1': forms.PasswordInput(attrs={'class': 'form-control'}),
-            'password2': forms.PasswordInput(attrs={'class': 'form-control'})
-        }
+    email = forms.EmailField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
 
 
 class LoginForm(forms.Form):

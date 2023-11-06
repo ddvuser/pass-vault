@@ -8,11 +8,7 @@
         <div class="col-sm-2 sidenav"></div>
         <div class="col-sm-8 text-left">
             <div class="d-flex justify-content-between">
-                <h3>Entries
-                    {% if entries_no_folder_count != 0%}
-                        ({{ entries_no_folder_count }}):
-                    {% else %}:{% endif %}
-                </h3>
+                <h3>Entries ({{ entries_no_folder_count }}):</h3>
                 <a class="btn btn-outline-secondary" href="{% url 'add_item' %}">Add Entry</a>
             </div>
             <hr />

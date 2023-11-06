@@ -122,7 +122,7 @@ def add_folder(request):
             folder.user = user
             folder.save()
             messages.success(request, 'Folder added.')
-            return redirect('index')
+            return redirect('folders')
         else:
             return redirect('add_folder')
     else:
@@ -145,7 +145,7 @@ def edit_folder(request, name):
         form = EditFolderForm(request.POST, instance=folder)
         if form.is_valid():
             form.save()
-            return redirect('index')
+            return redirect('folders')
     else:
         form = EditFolderForm(instance=folder)  # Prepopulate the form with item's data
     return render(request, 'folder/edit_folder.html', {'form': form, 'folder': folder.name})
@@ -155,7 +155,7 @@ def delete_folder(request, name):
     folder = get_object_or_404(Folder, user=request.user, name=name)
     if request.method == 'POST':
         folder.delete()
-        return redirect('index')
+        return redirect('folders')
     else:
         # confirm delete
         return render(request, 'folder/delete_folder_confirm.html', {'folder':folder.name})
