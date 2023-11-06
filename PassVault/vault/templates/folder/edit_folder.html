@@ -1,17 +1,36 @@
 {% extends 'base.html' %}
+
+{% block title %}Edit Folder: {{ folder }}{% endblock title %}
+    
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-
-    {% for field in form %}
-        {{ field.label_tag }} 
-        {{ field }}
-        {% if field.errors %}
-            <small>{{ field.errors|striptags  }}</small> 
-        {% endif %}
-    {% endfor %} 
-
-    <button type="submit">Edit folder</button>
-</form>
-<a href="{% url 'delete_folder' folder %}">Delete folder</a>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between">
+                        <h2 class="mb-0">Edit Folder</h2>
+                        <a type="button" href="{% url 'folders' %}" class="btn btn-primary">Go back</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <div class="mb-3">
+                                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label_tag }}</label>
+                                {{ field }}
+                                {% if field.errors %}
+                                    <small class="text-danger">{{ field.errors|striptags }}</small>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-primary btn-block">Edit Folder</button>
+                    </form>
+                    <a href="{% url 'delete_folder' folder %}" class="btn btn-danger btn-block mt-3">Delete Folder</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}
