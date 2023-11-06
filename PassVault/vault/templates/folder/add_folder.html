@@ -1,16 +1,32 @@
 {% extends 'base.html' %}
+
+{% block title %}Add Folder{% endblock %}
+
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-
-    {% for field in form %}
-        {{ field.label_tag }} 
-        {{ field }}
-        {% if field.errors %}
-            <small>{{ field.errors|striptags  }}</small> 
-        {% endif %}
-    {% endfor %} 
-
-    <button type="submit">Add folder</button>
-</form>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="mb-0">Add New Folder</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <div class="mb-3">
+                                {{ field.label_tag }}
+                                {{ field }}
+                                {% if field.errors %}
+                                    <small class="text-danger">{{ field.errors|striptags }}</small>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-primary btn-block">Add Folder</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}
