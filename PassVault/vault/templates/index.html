@@ -11,12 +11,24 @@
                 <h3>Entries ({{ entries_no_folder_count }}):</h3>
                 <a class="btn btn-outline-secondary" href="{% url 'add_item' %}">Add Entry</a>
             </div>
+            <div class="mt-3">
+                <form method="get" action="{% url 'index' %}">
+                    <label for="filter">Filter by:</label>
+                    <select name="filter" id="filter" class="form-select">
+                        <option value="created" {% if selected_filter == 'created' %}selected{% endif %}>Date Created</option>
+                        <option value="modified" {% if selected_filter == 'modified' %}selected{% endif %}>Date Modified</option>
+                        <option value="name_az" {% if selected_filter == 'name_az' %}selected{% endif %}>Name (A-Z)</option>
+                        <option value="name_za" {% if selected_filter == 'name_za' %}selected{% endif %}>Name (Z-A)</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Apply Filter</button>
+                </form>
+            </div>
             <hr />
             <ul class="list-group text-left">
                 {% for entry in entries %}
                     {% if entry.folder is None %}
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <a class="btn btn-link" href="{% url 'view_item' entry.id %}">{{entry.name}}</a>
+                            <a class="btn btn-link" href="{% url 'view_item' entry.id %}">{{ entry.name }}</a>
                             <a class="btn btn-outline-warning btn-sm align-self-center" href="{% url 'edit_item' entry.id %}">Edit</a>
                         </li>
                     {% endif %}

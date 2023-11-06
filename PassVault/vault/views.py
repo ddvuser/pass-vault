@@ -12,18 +12,37 @@ import string
 from .crypt_util import encrypt, decrypt
 import os
 
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from .models import Entry, Folder
+
 @login_required(login_url='login')
 def index(request):
     folders = Folder.objects.filter(user=request.user)
     
     entries = Entry.objects.filter(user=request.user)
     entries_no_folder = entries.filter(folder=None)
+    
+    # Get the filter criteria from the request's GET parameters
+    filter_criteria = request.GET.get('filter', 'created')  # Default to 'created'
+    
+    if filter_criteria == 'created':
+        entries = entries.order_by('created')
+    elif filter_criteria == 'modified':
+        entries = entries.order_by('modified')
+    elif filter_criteria == 'name_az':
+        entries = entries.order_by('name')
+    elif filter_criteria == 'name_za':
+        entries = entries.order_by('-name')
+    
     return render(request, 'index.html', 
-                  {'entries':entries, 
+                  {'entries': entries, 
                    'folders': folders,
                    'entries_no_folder': entries_no_folder,
                    'entries_no_folder_count': entries_no_folder.count(),
-                   'folders_count': folders.count()})
+                   'folders_count': folders.count(),
+                   'selected_filter': filter_criteria})  # Pass the selected filter criteria
+
 
 @login_required(login_url='login')
 def folders(request):
