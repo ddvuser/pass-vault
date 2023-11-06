@@ -1,9 +1,32 @@
 {% extends 'base.html' %}
+
+{% block title %}Folder: {{ folder }}{% endblock title %}
+    
 {% block content %}
-    <h2>{{ folder }}</h2>
-    <a href="{% url 'delete_folder' folder %}">Delete folder</a>
-    <a href="{% url 'edit_folder' folder %}">Edit folder</a>
-    {% for entry in items %}
-        <a href="{% url 'view_item' entry.id %}">{{ entry.name }}</a>
-    {% endfor %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="mb-0">{{ folder }}</h2>
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'delete_folder' folder %}" class="btn btn-danger">Delete Folder</a>
+                    <a href="{% url 'edit_folder' folder %}" class="btn btn-warning">Edit Folder</a>
+                    {% if items %}
+                        <ul class="list-group mt-3">
+                            {% for entry in items %}
+                                <li class="list-group-item">
+                                    <a href="{% url 'view_item' entry.id %}">{{ entry.name }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No entries in this folder.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}
