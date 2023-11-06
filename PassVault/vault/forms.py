@@ -1,6 +1,7 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm
 from .models import CustomUser, Entry, Folder
+from django.contrib.auth.forms import PasswordResetForm
 
 class RegisterForm(UserCreationForm):
     class Meta:
@@ -56,3 +57,19 @@ class EditFolderForm(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
         }
+
+class CustomPasswordResetForm(PasswordResetForm):
+    email = forms.EmailField(
+        max_length=254,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+
+class CustomPasswordResetConfirmForm(forms.Form):
+    new_password1 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        label="New Password"
+    )
+    new_password2 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        label="Confirm New Password"
+    )
