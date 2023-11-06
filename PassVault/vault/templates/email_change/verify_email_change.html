@@ -1,8 +1,24 @@
 {% extends 'base.html' %}
+{% block title %}Enter Verification Code{% endblock title %}
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    <input type="text" name="verification_code">
-    <button type="submit">Enter verification code</button>
-</form>
-{% endblock %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="mb-0">Enter Verification Code</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <input type="text" name="verification_code" class="form-control" placeholder="Enter verification code">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Enter verification code</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
