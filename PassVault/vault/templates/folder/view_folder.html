@@ -8,7 +8,10 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="mb-0">{{ folder }}</h2>
+                    <div class="d-flex justify-content-between">
+                        <h2 class="mb-0">{{ folder }}</h2>
+                        <a type="button" href="{% url 'folders' %}" class="btn btn-primary">Go back</a>
+                    </div>
                 </div>
                 <div class="card-body">
                     <a href="{% url 'delete_folder' folder %}" class="btn btn-danger">Delete Folder</a>

@@ -1,12 +1,41 @@
 {% extends 'base.html' %}
-{% block content %}
 
-<p>Name: {{ item.name }}</p>
-<p>Created: {{ item.created }}</p>
-<p>Modified: {{ item.modified }}</p>
-<p>Password: {{ item.password }}</p>
-<p>Email: {{ item.email }}</p>
-<p>Notes: {{ item.note }}</p>
-<p>Folder: <a href="{% url 'view_folder' item.folder %}">{{ item.folder }}</a></p>
-<a href="{% url 'delete_item' item.id %}">Delete entry</a>
+{% block title %}Entry: {{ item.name }}{% endblock title %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between">
+                        {% if item.folder %}
+                            <h2 class="mb-0">Entry: {{ item.name }}</h2> 
+                            <a type="button" href="{% url 'view_folder' item.folder %}" class="btn btn-primary">Go back</a>
+                        {% else %}
+                            <h2 class="mb-0">Entry: {{ item.name }}</h2> 
+                            <a type="button" href="{% url 'index' %}" class="btn btn-primary">Go back</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item"><strong>Name:</strong> {{ item.name }}</li>
+                        <li class="list-group-item"><strong>Created:</strong> {{ item.created }}</li>
+                        <li class="list-group-item"><strong>Modified:</strong> {{ item.modified }}</li>
+                        <li class="list-group-item"><strong>Password:</strong> {{ item.password }}</li>
+                        <li class="list-group-item"><strong>Email:</strong> {{ item.email }}</li>
+                        <li class="list-group-item"><strong>Notes:</strong> {{ item.note }}</li>
+                        {% if item.folder %}
+                            <li class="list-group-item"><strong>Folder:</strong> 
+                                <a href="{% url 'view_folder' item.folder %}">{{ item.folder }}</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                    <a href="{% url 'delete_item' item.id %}" class="btn btn-danger mt-3">Delete Entry</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}
