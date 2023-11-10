@@ -3,7 +3,7 @@ version: '3.8'
 services:
   web:
     build: .
-    command: python PassVault/manage.py runserver 0.0.0.0:8000
+    command: gunicorn PassVault.wsgi:application -c gunicorn_config.py
     volumes:
       - .:/usr/src/PassVault
     ports:
@@ -17,7 +17,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
-      ./.env.db.dev 
+      ./.env.db.dev
 
 volumes:
   postgres_data:
