@@ -1,30 +1,26 @@
-# Dockerfile
-
 FROM python:3
-
-WORKDIR /app
 
 ENV PIP_NO_CACHE_DIR off
 ENV PIP_DISABLE_PIP_VERSION_CHECK on
-ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE 1
 ENV COLUMNS 80
 
-# Install system dependencies, including netcat-openbsd
+WORKDIR /usr/src/PassVault
+
+# Install system dependencies
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends nano python3-pip gettext chrpath libssl-dev libxft-dev \
-    libfreetype6 libfreetype6-dev libfontconfig1 libfontconfig1-dev netcat-openbsd \
+    && apt-get install -y --no-install-recommends nano gettext netcat-openbsd \
     && rm -rf /var/lib/apt/lists/*
 
 # Project dependencies
-RUN pip install --upgrade pip
-COPY requirements.txt /app/
-RUN pip install -r requirements.txt
+COPY requirements.txt /usr/src/PassVault
+RUN pip install --upgrade pip \
+    && pip install -r requirements.txt
 
-COPY entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
-
-COPY ./PassVault/ /app/
+# Copy the application files
+COPY . /usr/src/PassVault/
 
 # Set the entrypoint for the container
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
+
