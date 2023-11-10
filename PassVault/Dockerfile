@@ -1,0 +1,29 @@
+FROM python:3
+
+WORKDIR /usr/src/app
+
+ENV PIP_NO_CACHE_DIR off
+ENV PIP_DISABLE_PIP_VERSION_CHECK on
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+ENV COLUMNS 80
+
+# Install system dependencies
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends nano gettext netcat-openbsd \
+    && rm -rf /var/lib/apt/lists/*
+
+# Project dependencies
+RUN pip install --upgrade pip
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+# copy entrypoint.sh
+COPY ./entrypoint.sh .
+RUN sed -i 's/\r$//g' /usr/src/app/entrypoint.sh
+RUN chmod +x /usr/src/app/entrypoint.sh
+
+COPY . .
+
+ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
+
