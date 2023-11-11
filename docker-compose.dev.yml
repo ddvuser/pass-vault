@@ -2,8 +2,10 @@ version: '3.8'
 
 services:
   web:
-    build: ./PassVault
-    command: gunicorn PassVault.wsgi:application -c gunicorn_config.py
+    build:
+      context: ./PassVault
+      dockerfile: Dockerfile.dev
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./PassVault/:/usr/src/app/
     ports:
@@ -12,7 +14,7 @@ services:
       - ./.env.dev
     depends_on:
       - db
-    entrypoint: /usr/src/app/entrypoint.sh
+    entrypoint: /usr/src/app/entrypoint.dev.sh
   db:
     image: postgres:15
     volumes:
